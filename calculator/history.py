@@ -1,18 +1,28 @@
-class History:
-    def __init__(self):
-        self._calculations = []
+"""Manage a collection of calculation objects."""
 
-    def add(self, calculation):
+from calculator.calculation import Calculation
+
+
+class History:
+    """Own session history and expose controlled access to its collection."""
+
+    def __init__(self) -> None:
+        self._calculations: list[Calculation] = []
+
+    def add(self, calculation: Calculation) -> None:
+        """Append a calculation to history."""
+        if not isinstance(calculation, Calculation):
+            raise TypeError("History accepts Calculation objects only.")
+
         self._calculations.append(calculation)
 
-    def get_all(self):
-        return list(self._calculations)
+    def get_history(self) -> list[Calculation]:
+        """Return a copy so callers cannot modify the internal list."""
+        return self._calculations.copy()
 
-    def remove(self, index):
+    def remove(self, index: int) -> Calculation:
+        """Remove and return a calculation by its zero-based index."""
         if index < 0 or index >= len(self._calculations):
-            raise IndexError("Calculation index out of range")
+            raise IndexError("Calculation does not exist.")
 
         return self._calculations.pop(index)
-
-    def clear(self):
-        self._calculations.clear()
